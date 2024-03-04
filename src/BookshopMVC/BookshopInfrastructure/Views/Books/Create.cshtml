@@ -1,0 +1,82 @@
+﻿@model BookshopDomain.Model.Book
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap_state.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/BookshopInfrastructure.styles.css" asp-append-version="true" />
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Створення книги</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Authors" class="control-label">Автори</label>
+                <select asp-for="Authors"
+                        class="selectpicker form-control"
+                        multiple
+                        data-size="5"
+                        data-live-search="true"
+                        asp-items="ViewBag.Authors"
+                        title="Оберіть авторів"></select>
+                <span asp-validation-for="Authors" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PublisherId" class="control-label"></label>
+                <select asp-for="PublisherId" class="form-control" asp-items="ViewBag.PublisherId"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Categories" class="control-label">Категорії</label>
+                <select asp-for="Categories"
+                        class="selectpicker form-control"
+                        multiple
+                        data-size="5"
+                        data-live-search="true"
+                        asp-items="ViewBag.Categories"
+                        title="Оберіть категорії"></select>
+                <span asp-validation-for="Categories" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Створити" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Повернутись до каталогу</a>
+</div>
+
+<script>$('select').selectpicker();</script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

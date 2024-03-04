@@ -1,0 +1,50 @@
+﻿@model IEnumerable<BookshopDomain.Model.Book>
+
+@{
+    ViewData["Title"] = "BooksByAuthor";
+}
+
+<h1 asp-controller="Books" asp-action="BooksByAuthor" asp-route-is="@ViewBag.AuthorId"> @ViewBag.AuthorFirstName @ViewBag.AuthorLastName - книги</h1>
+
+<p>
+    <a asp-action="Create" asp-route-is="@ViewBag.AuthorId">Додати книгу</a>
+</p>
+
+<table id="booksTable" class="table table-hover">
+    <thead>
+        <tr class="table-primary">
+            <th>
+                Назва
+            </th>
+            <th>
+                Ціна
+            </th>
+            <th>
+                Видавництво
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="table-secondary">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редагувати</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Деталі</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

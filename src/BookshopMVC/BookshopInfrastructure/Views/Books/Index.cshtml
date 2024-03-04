@@ -1,0 +1,92 @@
+﻿@model IEnumerable<BookshopDomain.Model.Book>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Каталог книг</h1>
+
+<p>
+    <a asp-action="Create">Додати нову книгу</a>
+</p>
+
+<div id="filterForm">
+    <div class="mb-3">
+        <label for="title" class="form-label">Назва книги:</label>
+        <input type="text" class="form-control" id="title" name="title">
+    </div>
+    <div class="mb-3">
+        <label for="author" class="form-label">Автор:</label>
+        <input type="text" class="form-control" id="author" name="author">
+     </div> 
+    <div class="mb-3">
+        <label for="publisher" class="form-label">Видавництво:</label>
+        <input type="text" class="form-control" id="publisher" name="publisher">
+    </div>
+    <button id="filterButton" class="btn btn-primary">Фільтрувати</button>
+</div>
+
+<div> </div>
+
+<table id="booksTable" class="table table-hover">
+    <thead>
+        <tr class="table-primary">
+            <th>
+                <h5>Назва</h5>
+            </th>
+            <th>
+                <h5>Автори</h5>
+            </th>
+            <th>
+                <h5>Ціна</h5>
+            </th>
+            <th>
+                <h5>Видавництво</h5>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr class="table-secondary">
+            <td>
+                <b>@Html.DisplayFor(modelItem => item.Title)</b>
+            </td>
+                <td>
+                    @string.Join(", ", item.Authors.Select(c => c.FullName))
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $('#filterButton').click(function () {
+            var title = $('#title').val();
+            var author = $('#author').val();
+            var publisher = $('#publisher').val();
+
+            $.ajax({
+                url: '@Url.Action("Filter", "Books")',
+                type: 'GET',
+                data: { title: title, author: author, publisher: publisher },
+                success: function (result) {
+                    $('#booksTable tbody').html(result);
+                }
+            });
+        });
+    </script>
+}
+
