@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "ContainingType": "BookshopInfrastructure.Controllers.ChartController",
+    "Method": "AuthorBookCountsJson",
+    "RelativePath": "api/Chart/AuthorBookCountsJson",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookshopInfrastructure.Controllers.ChartController",
+    "Method": "JsonData",
+    "RelativePath": "api/Chart/JsonData",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

@@ -33,3 +33,47 @@
 }
     </tbody>
 </table>
+
+<div class="container">
+    <div id="chart2"></div>
+</div>
+@section scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            $.get('api/Chart/AuthorBookCountsJson', function (AuthorBookCountsJson) {
+                data = google.visualization.arrayToDataTable(AuthorBookCountsJson, false);
+                var options = {
+                    title: 'Кількість книг від кожного автора',
+
+                    titleTextStyle: {
+                        fontSize: 18,
+                        bold: true
+                    },
+
+                    width: 900,
+                    height: 600,
+
+                    /*chartArea: { width: '900%',
+                                 height: '100%'
+                    },*/
+                    hAxis: {
+                        title: 'Кількість',
+                        minValue: 0,
+                        format: '0'
+                    },
+                    vAxis: {
+                        title: 'Автор'
+                    },
+                    colors: ['#6f42c1']
+                };
+                var chart = new google.visualization.BarChart(document.getElementById('chart2'));
+
+                chart.draw(data, options);
+            });
+        }
+    </script>
+}

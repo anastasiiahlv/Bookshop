@@ -313,3 +313,4 @@ C:\Users\USER\Desktop\Bookshop\src\BookshopMVC\BookshopMVC.BookshopDomain\obj\De
 C:\Users\USER\Desktop\Bookshop\src\BookshopMVC\BookshopMVC.BookshopDomain\obj\Debug\net8.0\BookshopDomain.pdb
 C:\Users\USER\Desktop\Bookshop\src\BookshopMVC\BookshopMVC.BookshopDomain\obj\Debug\net8.0\BookshopDomain.genruntimeconfig.cache
 C:\Users\USER\Desktop\Bookshop\src\BookshopMVC\BookshopMVC.BookshopDomain\obj\Debug\net8.0\ref\BookshopDomain.dll
+C:\Users\USER\Desktop\Bookshop\src\BookshopMVC\BookshopMVC.BookshopDomain\obj\Debug\net8.0\BookshopDomain.sourcelink.json

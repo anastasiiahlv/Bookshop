@@ -32,4 +32,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Books}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "chart",
+    pattern: "api/Chart/{action=Index}/{id?}");
+
 app.Run();
