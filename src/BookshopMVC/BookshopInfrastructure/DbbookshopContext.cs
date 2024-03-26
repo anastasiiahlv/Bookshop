@@ -9,11 +9,13 @@ public partial class DbbookshopContext : DbContext
 {
     public DbbookshopContext()
     {
+        Database.EnsureCreated();
     }
 
     public DbbookshopContext(DbContextOptions<DbbookshopContext> options)
         : base(options)
     {
+        Database.EnsureCreated();
     }
 
     public virtual DbSet<Address> Addresses { get; set; }
@@ -52,9 +54,27 @@ public partial class DbbookshopContext : DbContext
 
             entity.HasOne(d => d.Country).WithMany(p => p.Addresses)
                 .HasForeignKey(d => d.CountryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ADDRESSES_COUNTRIES");
         });
+
+        /*modelBuilder.Entity<Author>(entity =>
+        {
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.FullName).HasComputedColumnSql("[FirstName] + ' ' + [LastName]");
+
+            entity.HasMany(a => a.Books).WithMany(b => b.Authors)
+                .UsingEntity<Dictionary<string, object>>(
+                    "BooksAuthor",
+                    r => r.HasOne<Book>().WithMany().HasForeignKey("BookId").OnDelete(DeleteBehavior.Cascade),
+                    l => l.HasOne<Author>().WithMany().HasForeignKey("AuthorId").OnDelete(DeleteBehavior.Cascade),
+                    j =>
+                    {
+                        j.HasKey("AuthorId", "BookId").HasName("PK_BooksAuthors");
+                        j.ToTable("BooksAuthors");
+                    });
+        });*/
 
         modelBuilder.Entity<Author>(entity =>
         {
@@ -68,11 +88,11 @@ public partial class DbbookshopContext : DbContext
                     "BooksAuthor",
                     r => r.HasOne<Book>().WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_BooksAuthors_Books"),
                     l => l.HasOne<Author>().WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_BOOKSAUTHORS_AUTHORS"),
                     j =>
                     {
@@ -88,7 +108,7 @@ public partial class DbbookshopContext : DbContext
 
             entity.HasOne(d => d.Publisher).WithMany(p => p.Books)
                 .HasForeignKey(d => d.PublisherId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_BOOKS_PUBLISHERS");
         });
 
@@ -103,11 +123,11 @@ public partial class DbbookshopContext : DbContext
                     "BooksCategory",
                     r => r.HasOne<Book>().WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_BooksCategories_Books"),
                     l => l.HasOne<Category>().WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_BooksCategories_Categories"),
                     j =>
                     {
@@ -135,22 +155,22 @@ public partial class DbbookshopContext : DbContext
         {
             entity.HasOne(d => d.Address).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.AddressId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ORDERS_ADRESSES");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.CustomerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ORDERS_USERS");
 
             entity.HasOne(d => d.PaymentMethod).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.PaymentMethodId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ORDERS_PAYMENT_METHODS");
 
             entity.HasOne(d => d.Status).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.StatusId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ORDERS_STATUSES");
         });
 
@@ -158,12 +178,12 @@ public partial class DbbookshopContext : DbContext
         {
             entity.HasOne(d => d.Book).WithMany(p => p.OrdersBooks)
                 .HasForeignKey(d => d.BookId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ORDERSBOOKS_BOOKID");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrdersBooks)
                 .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_ORDERSBOOKS_ORDER");
         });
 

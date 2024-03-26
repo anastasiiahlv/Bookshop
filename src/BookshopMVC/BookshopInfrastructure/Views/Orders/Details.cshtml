@@ -38,14 +38,16 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Status.Name)
         </dd>
-
         <dt class="col-sm-2">
             Книги в замовленні
         </dt>
         <dd class="col-sm-10">
-            <span>
-                @string.Join(", ", Model.OrdersBooks.Select(ob => ob.Book?.Title))
-            </span>
+            @foreach (var ordersBook in Model.OrdersBooks)
+            {
+                <span>@ordersBook.Book.Title</span>
+
+                <br />
+            }
         </dd>
     </dl>
 </div>

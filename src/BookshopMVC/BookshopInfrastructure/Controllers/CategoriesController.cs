@@ -57,12 +57,16 @@ namespace BookshopInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Id")] Category category)
         {
-            if (ModelState.IsValid)
+            var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Name == category.Name);
+            if (existingCategory != null)
             {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("Name", "Категорія з такою назвою вже існує.");
+                return View(category);
             }
+
+            _context.Add(category);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

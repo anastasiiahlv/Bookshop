@@ -75,6 +75,13 @@ namespace BookshopInfrastructure.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingPublisher = await _context.Publishers.FirstOrDefaultAsync(c => c.Name == publisher.Name);
+                if (existingPublisher != null)
+                {
+                    ModelState.AddModelError("Name", "Видавництво з такою назвою вже існує.");
+                    return View(publisher);
+                }
+
                 _context.Add(publisher);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

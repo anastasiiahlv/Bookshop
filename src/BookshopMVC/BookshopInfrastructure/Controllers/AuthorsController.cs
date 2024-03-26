@@ -73,6 +73,14 @@ namespace BookshopInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FirstName,LastName,Id")] Author author)
         {
+            var existingAuthor = await _context.Authors.FirstOrDefaultAsync(c => c.FirstName == author.FirstName && c.LastName == author.LastName);
+
+            if (existingAuthor != null)
+            {
+                ModelState.AddModelError("LastName", "Автор з таким ім'ям та прізвищем вже існує.");
+                return View(author);
+            }
+
             _context.Add(author);
             await _context.SaveChangesAsync();
 

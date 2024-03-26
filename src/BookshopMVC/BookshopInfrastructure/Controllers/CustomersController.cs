@@ -58,6 +58,13 @@ namespace BookshopInfrastructure.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Email == customer.Email);
+                if (existingCustomer != null)
+                {
+                    ModelState.AddModelError("Email", "Користувач з такою поштою вже існує.");
+                    return View(customer);
+                }
+
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -58,6 +58,13 @@ namespace BookshopInfrastructure.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingPaymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(c => c.Name == paymentMethod.Name);
+                if (existingPaymentMethod != null)
+                {
+                    ModelState.AddModelError("Name", "Спосіб оплати з такою назвою вже існує.");
+                    return View(paymentMethod);
+                }
+
                 _context.Add(paymentMethod);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

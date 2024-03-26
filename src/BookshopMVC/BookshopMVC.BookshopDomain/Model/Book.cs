@@ -22,6 +22,8 @@ public partial class Book: Entity
     [DataType(DataType.Currency)]
     public double Price { get; set; }
     public virtual Publisher Publisher { get; set; } = null!;
+
+    [Display(Name = "Видавництво")]
     public int PublisherId { get; set; }
     public virtual ICollection<Author> Authors { get; set; } = new List<Author>();
     public virtual ICollection<Category> Categories { get; set; } = new List<Category>();

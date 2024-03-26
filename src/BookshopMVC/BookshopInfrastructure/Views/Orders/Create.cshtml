@@ -21,27 +21,19 @@
                 <label asp-for="CustomerId" class="control-label"></label>
                 <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
             </div>
-            <div class="form-group">
+           <div class="form-group">
+                <p>
+                    <a asp-controller="Addresses" asp-action="Create" asp-route-returnUrl="@Url.Action("Create", "Orders")">Додати адресу</a>
+                </p>
+           </div>
+           <div class="form-group">
                 <label asp-for="AddressId" class="control-label"></label>
                 <select asp-for="AddressId" class ="form-control" asp-items="ViewBag.AddressId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="StatusId" class="control-label"></label>
-                <select asp-for="StatusId" class ="form-control" asp-items="ViewBag.StatusId"></select>
-            </div>
+           </div>
             <div class="form-group">
                 <label asp-for="PaymentMethodId" class="control-label"></label>
                 <select asp-for="PaymentMethodId" class ="form-control" asp-items="ViewBag.PaymentMethodId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="CreationDate" class="control-label"></label>
-                <input asp-for="CreationDate" class="form-control" />
-                <span asp-validation-for="CreationDate" class="text-danger"></span>
-            </div>
-           <!-- <div class="form-group">
-                <label asp-for="OrdersBooks" class="control-label"></label>
-                <select asp-for="OrdersBooks" class="form-control" asp-items="ViewBag.BookId" multiple="multiple"></select>
-             </div> -->
             <div class="form-group">
                 <label asp-for="OrdersBooks" class="control-label">Книги</label>
                 <select asp-for="OrdersBooks"
@@ -70,4 +62,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-

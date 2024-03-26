@@ -58,6 +58,13 @@ namespace BookshopInfrastructure.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingCountry = await _context.Countries.FirstOrDefaultAsync(c => c.Name == country.Name);
+                if (existingCountry != null)
+                {
+                    ModelState.AddModelError("Name", "Країна доставки з такою назвою вже існує.");
+                    return View(country);
+                }
+
                 _context.Add(country);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

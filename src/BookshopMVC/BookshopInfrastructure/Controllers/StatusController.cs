@@ -58,6 +58,13 @@ namespace BookshopInfrastructure.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingStatus = await _context.Statuses.FirstOrDefaultAsync(c => c.Name == status.Name);
+                if (existingStatus != null)
+                {
+                    ModelState.AddModelError("Name", "Статус з такою назвою вже існує.");
+                    return View(status);
+                }
+
                 _context.Add(status);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

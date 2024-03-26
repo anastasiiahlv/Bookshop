@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookshopDomain.Model;
 using BookshopInfrastructure;
+using Newtonsoft.Json;
 
 namespace BookshopInfrastructure.Controllers
 {
@@ -25,26 +27,7 @@ namespace BookshopInfrastructure.Controllers
             var dbbookshopContext = _context.Orders.Include(o => o.Address).Include(o => o.Customer).Include(o => o.PaymentMethod).Include(o => o.Status);
             return View(await dbbookshopContext.ToListAsync());
         }
-
-        [HttpPost]
-        public async Task<IActionResult> ConfirmPurchase(int orderId)
-        {
-            var bookCount = await _context.OrdersBooks.Where(o => o.OrderId == orderId).CountAsync();
-            if (bookCount > 0)
-            {
-                var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
-                if (order == null)
-                    return NotFound();
-                else
-                {
-                    order.CreationDate = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
+        
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -80,15 +63,15 @@ namespace BookshopInfrastructure.Controllers
         }
 
         // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,AddressId,StatusId,PaymentMethodId,CreationDate,DispatchDate,ArrivalDate,Id")] Order order, int[] books)
         {
+            order.CreationDate = DateTime.Now;
+            order.StatusId = 1;
             _context.Add(order);
             await _context.SaveChangesAsync();
-                
+
             ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Address1", order.AddressId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email", order.CustomerId);
             ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "Name", order.PaymentMethodId);
@@ -130,31 +113,28 @@ namespace BookshopInfrastructure.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(order);
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderExists(order.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
             ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Address1", order.AddressId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email", order.CustomerId);
             ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "Name", order.PaymentMethodId);
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name", order.StatusId);
-            return View(order);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Orders/Delete/5

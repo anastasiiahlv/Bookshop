@@ -24,13 +24,13 @@ public partial class Order: Entity
     public int PaymentMethodId { get; set; }
 
     [Display(Name = "Дата створення")]
-    public DateOnly CreationDate { get; set; }
+    public DateTime CreationDate { get; set; }
 
     [Display(Name = "Дата відправлення")]
-    public DateOnly DispatchDate { get; set; }
+    public DateTime DispatchDate { get; set; }
 
     [Display(Name = "Дата прибуття")]
-    public DateOnly ArrivalDate { get; set; }
+    public DateTime ArrivalDate { get; set; }
 
     [Display(Name = "Адреса доставки")]
     public virtual Address Address { get; set; } = null!;
