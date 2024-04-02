@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using BookshopDomain.Model;
 using BookshopInfrastructure;
 using Newtonsoft.Json;
+using System.Numerics;
 
 namespace BookshopInfrastructure.Controllers
 {
@@ -67,17 +68,31 @@ namespace BookshopInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,AddressId,StatusId,PaymentMethodId,CreationDate,DispatchDate,ArrivalDate,Id")] Order order, int[] books)
         {
-            order.CreationDate = DateTime.Now;
-            order.StatusId = 1;
-            _context.Add(order);
-            await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                order.CreationDate = DateTime.Now;
+                order.StatusId = 1;
+                _context.Add(order);
 
+                foreach (var bookId in books)
+                {
+                    var book = await _context.Books.FindAsync(bookId);
+                    if (book != null)
+                    {
+                        var orderBook = new OrdersBook { BookId = bookId };
+                        order.OrdersBooks.Add(orderBook);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
             ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Address1", order.AddressId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email", order.CustomerId);
             ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "Name", order.PaymentMethodId);
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name", order.StatusId);
             ViewData["BookId"] = new SelectList(_context.Books, "Id", "Title", order.OrdersBooks.Select(b => b.BookId));
-            return RedirectToAction(nameof(Index));
+            return View(order);
         }
 
         // GET: Orders/Edit/5

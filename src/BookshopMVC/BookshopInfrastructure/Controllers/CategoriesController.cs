@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookshopDomain.Model;
 using BookshopInfrastructure;
+using BookshopInfrastructure.Models;
 
 namespace BookshopInfrastructure.Controllers
 {
@@ -147,7 +148,9 @@ namespace BookshopInfrastructure.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                _context.Categories.Remove(category);
+
+                var _categoryViewModel = new CategoryViewModel(_context, category);
+                _categoryViewModel.DeleteCategory();
             }
 
             await _context.SaveChangesAsync();

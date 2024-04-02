@@ -36,7 +36,10 @@ namespace BookshopInfrastructure.Controllers
 
             var ordersBook = await _context.OrdersBooks
                 .Include(o => o.Book)
-                .Include(o => o.Order)
+                .Include(o => o.Order).ThenInclude(c => c.Customer)
+                .Include(o => o.Order).ThenInclude(a => a.Address)
+                .Include(o => o.Order).ThenInclude(s => s.Status)
+                .Include(o => o.Order).ThenInclude(p => p.PaymentMethod)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ordersBook == null)
             {
@@ -47,10 +50,16 @@ namespace BookshopInfrastructure.Controllers
         }
 
         // GET: OrdersBooks/Create
-        public IActionResult Create()
+        public IActionResult Create(int Id)
         {
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Description");
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
+            var book = _context.Books.FirstOrDefault(b => b.Id == Id);
+            
+            ViewData["Book"] = book;
+            ViewData["BookId"] = new SelectList(new List<Book> { book }, "Id", "Title");
+            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name");
+            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "Name");
+            ViewData["AdressId"] = new SelectList(_context.Addresses, "Id", "Address1");
+            ViewData["CustomerId"] = new SelectList(_context.Addresses, "Id", "FullName");
             return View();
         }
 
@@ -67,7 +76,7 @@ namespace BookshopInfrastructure.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Description", ordersBook.BookId);
+            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Title", ordersBook.BookId);
             ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", ordersBook.OrderId);
             return View(ordersBook);
         }

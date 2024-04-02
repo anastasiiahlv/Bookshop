@@ -3,24 +3,19 @@
   "WorkspaceRootPath": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|c:\\users\\user\\desktop\\bookshop\\src\\bookshopmvc\\bookshopinfrastructure\\controllers\\addressescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|solutionrelative:bookshopinfrastructure\\controllers\\addressescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7C2491A8-B134-464B-9A90-C162F46C29DD}|BookshopMVC.BookshopDomain\\BookshopDomain.csproj|c:\\users\\user\\desktop\\bookshop\\src\\bookshopmvc\\bookshopmvc.bookshopdomain\\model\\address.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C2491A8-B134-464B-9A90-C162F46C29DD}|BookshopMVC.BookshopDomain\\BookshopDomain.csproj|solutionrelative:bookshopmvc.bookshopdomain\\model\\address.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|c:\\users\\user\\desktop\\bookshop\\src\\bookshopmvc\\bookshopinfrastructure\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|solutionrelative:bookshopinfrastructure\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|c:\\users\\user\\desktop\\bookshop\\src\\bookshopmvc\\bookshopinfrastructure\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|solutionrelative:bookshopinfrastructure\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Config\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|c:\\users\\user\\desktop\\bookshop\\src\\bookshopmvc\\bookshopinfrastructure\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|solutionrelative:bookshopinfrastructure\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|c:\\users\\user\\desktop\\bookshop\\src\\bookshopmvc\\bookshopinfrastructure\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DBE319A7-EB7F-41A9-98D2-20B05DDE4FE9}|BookshopInfrastructure\\BookshopInfrastructure.csproj|solutionrelative:bookshopinfrastructure\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,17 +25,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopInfrastructure\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "BookshopInfrastructure\\Views\\Shared\\_Layout.cshtml",
               "ToolTip": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopInfrastructure\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "BookshopInfrastructure\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACsAAAAdAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAA9AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-02-28T14:05:03.727Z",
               "IsPinned": true,
@@ -48,16 +43,17 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "bootstrap.css",
               "DocumentMoniker": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopInfrastructure\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
               "RelativeDocumentMoniker": "BookshopInfrastructure\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
               "ToolTip": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopInfrastructure\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
               "RelativeToolTip": "BookshopInfrastructure\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
-              "ViewState": "AQIAAAMAAAAAAAAAAIBJwAoAAAAWAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMJAAACAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2024-03-11T16:19:50.906Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -67,35 +63,24 @@
               "RelativeDocumentMoniker": "BookshopInfrastructure\\Program.cs",
               "ToolTip": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopInfrastructure\\Program.cs",
               "RelativeToolTip": "BookshopInfrastructure\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAArAAAA",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAYAAAArAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-02-28T00:32:52.391Z",
-              "IsPinned": true
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AddressesController.cs",
-              "DocumentMoniker": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopInfrastructure\\Controllers\\AddressesController.cs",
-              "RelativeDocumentMoniker": "BookshopInfrastructure\\Controllers\\AddressesController.cs",
-              "ToolTip": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopInfrastructure\\Controllers\\AddressesController.cs",
-              "RelativeToolTip": "BookshopInfrastructure\\Controllers\\AddressesController.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAzwAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-26T01:07:32.654Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Address.cs",
-              "DocumentMoniker": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopMVC.BookshopDomain\\Model\\Address.cs",
-              "RelativeDocumentMoniker": "BookshopMVC.BookshopDomain\\Model\\Address.cs",
-              "ToolTip": "C:\\Users\\USER\\Desktop\\Bookshop\\src\\BookshopMVC\\BookshopMVC.BookshopDomain\\Model\\Address.cs",
-              "RelativeToolTip": "BookshopMVC.BookshopDomain\\Model\\Address.cs",
-              "ViewState": "AQIAAAEAAAAAAAAAAAAUwA4AAAArAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-26T00:55:37.865Z",
+              "Title": "web.config",
+              "DocumentMoniker": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Config\\web.config",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Config\\web.config",
+              "ToolTip": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Config\\web.config",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\Config\\web.config",
+              "ViewState": "AQIAACQAAAAAAAAAAAAAACkAAABBAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2024-04-01T20:15:17.955Z",
+              "IsPinned": true,
               "EditorCaption": ""
             }
           ]

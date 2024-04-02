@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookshopDomain.Model;
 using BookshopInfrastructure;
+using BookshopInfrastructure.Models;
+using System.IO;
 
 namespace BookshopInfrastructure.Controllers
 {
@@ -82,6 +84,12 @@ namespace BookshopInfrastructure.Controllers
             }
 
             _context.Add(author);
+
+            foreach (var book in author.Books)
+            {
+                book.Authors.Add(author);
+            }
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -163,7 +171,9 @@ namespace BookshopInfrastructure.Controllers
             var author = await _context.Authors.FindAsync(id);
             if (author != null)
             {
-                _context.Authors.Remove(author);
+
+                var _authorViewModel = new AuthorViewModel(_context, author);
+                _authorViewModel.DeleteAuthor();
             }
 
             await _context.SaveChangesAsync();

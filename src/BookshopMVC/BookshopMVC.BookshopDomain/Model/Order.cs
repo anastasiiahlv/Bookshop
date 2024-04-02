@@ -15,6 +15,9 @@ public partial class Order: Entity
     public int CustomerId { get; set; }
 
     [Display(Name = "Адреса доставки")]
+    [Required(ErrorMessage = "Поле не повинно бути порожнім")]
+    /*[RegularExpression(@"^м\.\s[a-zA-Zа-яА-ЯїЇіІєЄ'’`ʼ]+,\sвул\.\s[a-zA-Zа-яА-ЯїЇіІєЄ'’`ʼ]+\sбуд\.\s\d+([,-]?\s?(кв\.)?\s?\d+)?$",
+    ErrorMessage = "Неправильний формат.")]*/
     public int AddressId { get; set; }
 
     [Display(Name = "Статус замовлення")]
@@ -33,6 +36,9 @@ public partial class Order: Entity
     public DateTime ArrivalDate { get; set; }
 
     [Display(Name = "Адреса доставки")]
+    [Required(ErrorMessage = "Поле не повинно бути порожнім")]
+    /*[RegularExpression(@"^м\.\s[a-zA-Zа-яА-ЯїЇіІєЄ'’`ʼ]+,\sвул\.\s[a-zA-Zа-яА-ЯїЇіІєЄ'’`ʼ]+\sбуд\.\s\d+([,-]?\s?(кв\.)?\s?\d+)?$",
+    ErrorMessage = "Неправильний формат.")]*/
     public virtual Address Address { get; set; } = null!;
 
     [Display(Name = "Користувач")]

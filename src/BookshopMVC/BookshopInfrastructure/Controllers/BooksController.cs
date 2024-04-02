@@ -94,18 +94,6 @@ namespace BookshopInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PublisherId, Categories, Authors, Title,Description,Price,Id")] Book book, int[] Categories, int[] Authors)
         {
-            /*var existingBook = await _context.Books
-        .Where(b =>
-            b.Title.Equals(book.Title) &&
-            b.Description.Equals(book.Description) &&
-            b.Price == book.Price &&
-            b.PublisherId == book.PublisherId)
-        .FirstOrDefaultAsync();
-
-            if (existingBook != null)
-            {
-                ModelState.AddModelError(string.Empty, "Книга з такими характеристиками вже існує.");
-            }*/
 
             if (Categories != null)
             {

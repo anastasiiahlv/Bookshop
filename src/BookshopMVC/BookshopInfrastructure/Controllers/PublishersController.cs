@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookshopDomain.Model;
 using BookshopInfrastructure;
+using BookshopInfrastructure.Models;
 
 namespace BookshopInfrastructure.Controllers
 {
@@ -166,7 +167,9 @@ namespace BookshopInfrastructure.Controllers
             var publisher = await _context.Publishers.FindAsync(id);
             if (publisher != null)
             {
-                _context.Publishers.Remove(publisher);
+
+                var _publisherViewModel = new PublisherViewModel(_context, publisher);
+                _publisherViewModel.DeletePublisher();
             }
 
             await _context.SaveChangesAsync();
