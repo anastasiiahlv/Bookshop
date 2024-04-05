@@ -16,8 +16,8 @@ public partial class Order: Entity
 
     [Display(Name = "Адреса доставки")]
     [Required(ErrorMessage = "Поле не повинно бути порожнім")]
-    /*[RegularExpression(@"^м\.\s[a-zA-Zа-яА-ЯїЇіІєЄ'’`ʼ]+,\sвул\.\s[a-zA-Zа-яА-ЯїЇіІєЄ'’`ʼ]+\sбуд\.\s\d+([,-]?\s?(кв\.)?\s?\d+)?$",
-    ErrorMessage = "Неправильний формат.")]*/
+    [RegularExpression(@"^м\.\s[a-zA-Zа-яА-ЯїЇіІєЄ'’`ʼ]+,\sвул\.\s[a-zA-Zа-яА-ЯїЇіІєЄ'’`ʼ]+\sбуд\.\s\d+([,-]?\s?(кв\.)?\s?\d+)?$",
+    ErrorMessage = "Неправильний формат.")]
     public int AddressId { get; set; }
 
     [Display(Name = "Статус замовлення")]

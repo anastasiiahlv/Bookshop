@@ -1,4 +1,4 @@
-﻿@model BookshopDomain.Model.Order
+﻿@model BookshopInfrastructure.Models.OrderModel
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap_state.min.css" />
@@ -35,17 +35,15 @@
                 <select asp-for="PaymentMethodId" class ="form-control" asp-items="ViewBag.PaymentMethodId"></select>
             </div>
             
-            <!--<div class="form-group">
-                <label asp-for="OrdersBooks" class="control-label">Книги</label>
-                <select asp-for="OrdersBooks"
-                        class="selectpicker form-control"
-                        multiple
-                        data-size="5"
-                        data-live-search="true"
-                        asp-items="ViewBag.BookId"
-                        title="Оберіть книги"></select>
-                <span asp-validation-for="OrdersBooks" class="text-danger"></span>
-            </div> -->
+            <h3>Додання книг</h3>
+            <div class="form-group" id="orderItems">
+                <label>Книга:</label>
+                <select class="form-control" asp-items="ViewBag.BookId" id="bookId"></select>
+                <label>Кількість:</label>
+                <input type="number" class="form-control" id="bookQuantity" />
+                <button type="button" class="btn btn-primary" id="addItem">Додати до замовлення</button>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Створити" class="btn btn-primary" />
             </div>
@@ -62,4 +60,16 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        $('#addItem').click(function () {
+            var bookId = $('#bookId').val();
+            var bookQuantity = $('#bookQuantity').val();
+            var selectedBookTitle = $('#bookId option:selected').text();
+            $('#orderItems').append('<div>' + selectedBookTitle + ' - Кількість: ' + bookQuantity + '</div>');
+            
+            $('#orderItems').append('<input type="hidden" name="OrderItems[' + bookId + '].BookId" value="' + bookId + '" />');
+            $('#orderItems').append('<input type="hidden" name="OrderItems[' + bookId + '].BookQuantity" value="' + bookQuantity + '" />');
+        });
+    </script>
 }

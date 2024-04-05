@@ -10,6 +10,7 @@ using BookshopDomain.Model;
 using BookshopInfrastructure;
 using Newtonsoft.Json;
 using System.Numerics;
+using BookshopInfrastructure.Models;
 
 namespace BookshopInfrastructure.Controllers
 {
@@ -66,33 +67,38 @@ namespace BookshopInfrastructure.Controllers
         // POST: Orders/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,AddressId,StatusId,PaymentMethodId,CreationDate,DispatchDate,ArrivalDate,Id")] Order order, int[] books)
+        public async Task<IActionResult> Create(OrderModel orderModel)
         {
-            if (ModelState.IsValid)
+            var order = new Order
             {
-                order.CreationDate = DateTime.Now;
-                order.StatusId = 1;
-                _context.Add(order);
+                CustomerId = orderModel.CustomerId,
+                AddressId = orderModel.AddressId,
+                StatusId = 1,
+                PaymentMethodId = orderModel.PaymentMethodId,
+                CreationDate = DateTime.Now,
+            };
 
-                foreach (var bookId in books)
+            _context.Add(order);
+
+            if (orderModel.OrderItems != null)
+            {
+                foreach (var item in orderModel.OrderItems)
                 {
-                    var book = await _context.Books.FindAsync(bookId);
+                    var book = await _context.Books.FindAsync(item.BookId);
                     if (book != null)
                     {
-                        var orderBook = new OrdersBook { BookId = bookId };
+                        var orderBook = new OrdersBook
+                        {
+                            BookId = item.BookId,
+                            BookQuantity = item.BookQuantity
+                        };
                         order.OrdersBooks.Add(orderBook);
                     }
                 }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Address1", order.AddressId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email", order.CustomerId);
-            ViewData["PaymentMethodId"] = new SelectList(_context.PaymentMethods, "Id", "Name", order.PaymentMethodId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name", order.StatusId);
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Title", order.OrdersBooks.Select(b => b.BookId));
-            return View(order);
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Orders/Edit/5
@@ -130,6 +136,7 @@ namespace BookshopInfrastructure.Controllers
 
             try
             {
+                order.CreationDate = DateTime.Now;
                 _context.Update(order);
                 await _context.SaveChangesAsync();
             }
@@ -165,6 +172,7 @@ namespace BookshopInfrastructure.Controllers
                 .Include(o => o.Customer)
                 .Include(o => o.PaymentMethod)
                 .Include(o => o.Status)
+                .Include(o => o.OrdersBooks).ThenInclude(ob => ob.Book)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
