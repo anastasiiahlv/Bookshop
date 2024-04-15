@@ -3202,6 +3202,7 @@
       },
       "BookshopDomain/1.0.0": {
         "dependencies": {
+          "ClosedXML": "0.102.2",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "8.0.3",
           "Microsoft.EntityFrameworkCore": "8.0.3",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.3",

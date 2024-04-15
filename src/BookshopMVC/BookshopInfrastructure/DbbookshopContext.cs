@@ -58,24 +58,6 @@ public partial class DbbookshopContext : DbContext
                 .HasConstraintName("FK_ADDRESSES_COUNTRIES");
         });
 
-        /*modelBuilder.Entity<Author>(entity =>
-        {
-            entity.Property(e => e.FirstName).HasMaxLength(50);
-            entity.Property(e => e.LastName).HasMaxLength(50);
-            entity.Property(e => e.FullName).HasComputedColumnSql("[FirstName] + ' ' + [LastName]");
-
-            entity.HasMany(a => a.Books).WithMany(b => b.Authors)
-                .UsingEntity<Dictionary<string, object>>(
-                    "BooksAuthor",
-                    r => r.HasOne<Book>().WithMany().HasForeignKey("BookId").OnDelete(DeleteBehavior.Cascade),
-                    l => l.HasOne<Author>().WithMany().HasForeignKey("AuthorId").OnDelete(DeleteBehavior.Cascade),
-                    j =>
-                    {
-                        j.HasKey("AuthorId", "BookId").HasName("PK_BooksAuthors");
-                        j.ToTable("BooksAuthors");
-                    });
-        });*/
-
         modelBuilder.Entity<Author>(entity =>
         {
             entity.Property(e => e.FirstName).HasMaxLength(50);

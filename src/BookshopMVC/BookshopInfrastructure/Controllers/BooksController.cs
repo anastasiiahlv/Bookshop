@@ -9,16 +9,19 @@ using BookshopDomain.Model;
 using BookshopInfrastructure;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using BookshopInfrastructure.Services;
 
 namespace BookshopInfrastructure.Controllers
 {
     public class BooksController : Controller
     {
         private readonly DbbookshopContext _context;
+        private readonly IDataPortServiceFactory<Book> _bookDataPortServiceFactory;
 
         public BooksController(DbbookshopContext context)
         {
             _context = context;
+            _bookDataPortServiceFactory = new BookDataPortServiceFactory(_context);
         }
 
         // GET: Books
@@ -172,23 +175,23 @@ namespace BookshopInfrastructure.Controllers
                 .Include(b => b.Authors)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-                bookInDb.Categories.Clear();
+                bookInDb?.Categories.Clear();
                 foreach (var categoryId in Categories)
                 {
                     var category = await _context.Categories.FindAsync(categoryId);
                     if (category != null)
                     {
-                        bookInDb.Categories.Add(category);
+                        bookInDb?.Categories.Add(category);
                     }
                 }
 
-                bookInDb.Authors.Clear();
+                bookInDb?.Authors.Clear();
                 foreach (var authorId in Authors)
                 {
                     var author = await _context.Authors.FindAsync(authorId);
                     if (author != null)
                     {
-                        bookInDb.Authors.Add(author);
+                        bookInDb?.Authors.Add(author);
                     }
                 }
 
@@ -302,5 +305,42 @@ namespace BookshopInfrastructure.Controllers
 
             return View(await booksByAuthor.ToListAsync());
         }
+
+        [HttpGet]
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(IFormFile fileExcel, CancellationToken cancellationToken = default)
+        {
+            var importService = _bookDataPortServiceFactory.GetImportService(fileExcel.ContentType);
+            using var stream = fileExcel.OpenReadStream();
+            await importService.ImportFromStreamAsync(stream, cancellationToken);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Export([FromQuery] string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      CancellationToken cancellationToken = default)
+        {
+            var exportService = _bookDataPortServiceFactory.GetExportService(contentType);
+
+            var memoryStream = new MemoryStream();
+
+            await exportService.WriteToAsync(memoryStream, cancellationToken);
+
+            await memoryStream.FlushAsync(cancellationToken);
+            memoryStream.Position = 0;
+
+
+            return new FileStreamResult(memoryStream, contentType)
+            {
+                FileDownloadName = $"books_{DateTime.UtcNow.ToShortDateString()}.xlsx"
+            };
+        }
+
     }
 }

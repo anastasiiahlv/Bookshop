@@ -10,6 +10,14 @@
     <a asp-action="Create">Додати нову книгу</a>
 </p>
 
+<p>
+    <a class="btn btn-primary mb-3" type="=submit" asp-area="" asp-controller="Books" asp-action="Import">Завантажити з файлу</a>
+
+    <a class="btn btn-primary mb-3" type="=submit" asp-area="" asp-controller="Books" asp-action="Export">Експортувати у файл</a>
+</p>
+
+
+
 <div id="filterForm">
     <div class="mb-3">
         <label for="title" class="form-label">Назва книги:</label>

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using BookshopDomain.Model;
 using BookshopInfrastructure;
 using BookshopInfrastructure.Models;
+using BookshopInfrastructure.Services;
+using DocumentFormat.OpenXml.Vml.Office;
 
 namespace BookshopInfrastructure.Controllers
 {
@@ -17,7 +19,7 @@ namespace BookshopInfrastructure.Controllers
 
         public CategoriesController(DbbookshopContext context)
         {
-            _context = context;
+            _context = context; 
         }
 
         // GET: Categories
