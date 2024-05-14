@@ -7,7 +7,7 @@
 <h1>Імпорт</h1>
 
 <div>
-    <h3>Оберіть excel-файл для завантаження</h3>
+    <h3>Оберіть Excel-файл для завантаження</h3>
     @using (Html.BeginForm("Import", "Books", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
     {
         <div>
@@ -18,5 +18,24 @@
             </div>
         </div>
     }
+
+    @if (ViewBag.Message != null)
+    {
+        <div id="message" class="alert alert-info">
+            @ViewBag.Message
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            if ($('#message').length) {
+                setTimeout(function() {
+                    $('#message').fadeOut('slow');
+                }, 5000);
+            }
+        });
+    </script>
+}
 

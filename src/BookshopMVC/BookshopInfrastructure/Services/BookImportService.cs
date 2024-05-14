@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace BookshopInfrastructure.Services
 {
-    public class BookImportService: IImportService<Book>
+    public class BookImportService : IImportService<Book>
     {
         private readonly DbbookshopContext _context;
         private static bool _isValid;
@@ -19,11 +19,11 @@ namespace BookshopInfrastructure.Services
             _context = context;
         }
 
-        public async Task ImportFromStreamAsync(Stream stream, CancellationToken cancellationToken)
+        public async Task<string> ImportFromStreamAsync(Stream stream, CancellationToken cancellationToken)
         {
             if (!stream.CanRead)
             {
-                throw new ArgumentException("Дані не можуть бути прочитані", nameof(stream));
+                return "Дані не можуть бути прочитані";
             }
 
             using (XLWorkbook workBook = new XLWorkbook(stream))
@@ -32,119 +32,166 @@ namespace BookshopInfrastructure.Services
                 {
                     foreach (var row in worksheet.RowsUsed().Skip(1))
                     {
-                        await AddBookAsync(row, cancellationToken);
+                        var (book, errorMessage) = await AddBookAsync(row, cancellationToken);
+                        if (errorMessage != null)
+                        {
+                            return errorMessage;
+                        }
                     }
                 }
             }
             await _context.SaveChangesAsync(cancellationToken);
+            return "Імпорт успішно завершено";
         }
 
-        private async Task AddBookAsync(IXLRow row, CancellationToken cancellationToken)
+        private bool IsBookInDB(Book? book)
         {
-            Book? book = _context.Books.FirstOrDefault(b => b.Title == GetBookTitle(row));
+            if (book == null)
+            {
+                return false;
+            }
+
+            return _context.Books.Any(b =>
+                b.Title == book.Title &&
+                b.Description == book.Description &&
+                b.Price == book.Price);
+        }
+
+        private async Task<(Book?, string?)> AddBookAsync(IXLRow row, CancellationToken cancellationToken)
+        {
+            var (title, titleError) = GetBookTitle(row);
+            var (description, descriptionError) = GetBookDescription(row);
+            var (price, priceError) = GetBookPrice(row);
+            var (publisherId, publisherIdError) = GetPublisherId(row);
+
+            var errorMessages = new List<string>();
+
+            if (titleError != null) errorMessages.Add(titleError);
+            if (descriptionError != null) errorMessages.Add(descriptionError);
+            if (priceError != null) errorMessages.Add(priceError);
+            if (publisherIdError != null) errorMessages.Add(publisherIdError);
+
+            if (errorMessages.Any())
+            {
+                return (null, string.Join("\n", errorMessages));
+            }
+
+            var book = _context.Books
+                .Include(b => b.Authors)
+                .Include(b => b.Categories)
+                .FirstOrDefault(b => b.Title == title);
 
             if (book != null)
             {
-                book.Description = GetBookDescription(row);
-                book.Price = GetBookPrice(row);
-                book.PublisherId = GetPublisherId(row);
-                _context.Books.Add(book);
-                await GetAuthorsAsync(row, book, cancellationToken);
-                await GetCategoriesAsync(row, book, cancellationToken);
-            }
-            else if (_isValid)
-            {
-                Book _book = new Book
+                book.Description = description;
+                book.Price = price.Value;
+                book.PublisherId = publisherId.Value;
+
+                book.Authors.Clear();
+                book.Categories.Clear();
+
+                var authors = await GetAuthorsAsync(row, cancellationToken);
+                var categories = await GetCategoriesAsync(row, cancellationToken);
+
+                foreach (var author in authors)
                 {
-                    Title = GetBookTitle(row),
-                    Description = GetBookDescription(row),
-                    PublisherId = GetPublisherId(row),
-                    Price = GetBookPrice(row)
+                    book.Authors.Add(author);
+                }
+
+                foreach (var category in categories)
+                {
+                    book.Categories.Add(category);
+                }
+
+                _context.Books.Update(book);
+            }
+            else
+            {
+                book = new Book
+                {
+                    Title = title,
+                    Description = description,
+                    PublisherId = publisherId.Value,
+                    Price = price.Value
                 };
 
-                _context.Books.Add(_book);
-                await GetAuthorsAsync(row, _book, cancellationToken);
-                await GetCategoriesAsync(row, _book, cancellationToken);
+                var authors = await GetAuthorsAsync(row, cancellationToken);
+                var categories = await GetCategoriesAsync(row, cancellationToken);
+
+                foreach (var author in authors)
+                {
+                    book.Authors.Add(author);
+                }
+
+                foreach (var category in categories)
+                {
+                    book.Categories.Add(category);
+                }
+
+                _context.Books.Add(book);
             }
 
-            if (!_isValid)
-            {
-                throw new ArgumentException(_validationErrorStr);
-            }
+            return (book, null);
         }
 
-        private static string GetBookTitle(IXLRow row)
+        private static (string, string?) GetBookTitle(IXLRow row)
         {
             int rowNumber = row.RowNumber();
             string value = row.Cell(1).Value.ToString();
 
             if (string.IsNullOrEmpty(value))
             {
-                _isValid = false;
-                _validationErrorStr += $"Назва книги обов'язкова! Помилка в рядку {rowNumber}.\n";
-                return "";
+                return ("", $"Назва книги обов'язкова! Помилка в рядку {rowNumber}.\n");
             }
 
-            return value;
+            return (value, null);
         }
 
-        private static string GetBookDescription(IXLRow row)
+        private static (string, string?) GetBookDescription(IXLRow row)
         {
             int rowNumber = row.RowNumber();
             string value = row.Cell(3).Value.ToString();
 
             if (string.IsNullOrEmpty(value))
             {
-                _isValid = false;
-                _validationErrorStr += $"Опис книги обов'язковий! Помилку в рядку {rowNumber}.\n";
-                return "";
+                return ("", $"Опис книги обов'язковий! Помилка в рядку {rowNumber}.\n");
             }
 
-            return value;
+            return (value, null);
         }
 
-        private static double GetBookPrice(IXLRow row)
+        private static (double?, string?) GetBookPrice(IXLRow row)
         {
             int rowNumber = row.RowNumber();
             string valueStr = row.Cell(5).Value.ToString();
 
             if (string.IsNullOrEmpty(valueStr))
             {
-                _isValid = false;
-                _validationErrorStr += $"Ціна книги обов'язкова! Помилка в рядку {rowNumber}.\n";
-                return 0;
+                return (null, $"Ціна книги обов'язкова! Помилка в рядку {rowNumber}.\n");
             }
 
-            double value;
-
-            if (double.TryParse(valueStr, out value))
+            if (double.TryParse(valueStr, out double value))
             {
                 if (value < 0.01 || value > 20000.00)
                 {
-                    _isValid = false;
-                    _validationErrorStr += $"Ціна має бути більше 0.01 і менше 20000.00. Помилка в рядку {rowNumber}.\n";
-                    return 0;
+                    return (null, $"Ціна має бути більше 0.01 і менше 20000.00. Помилка в рядку {rowNumber}.\n");
                 }
 
                 Regex regex = new Regex(@"^\d+(\.\d{1,2})?$");
                 if (!regex.IsMatch(valueStr))
                 {
-                    _isValid = false;
-                    _validationErrorStr += $"Неправильний формат ціни. Помилка в рядку {rowNumber}.\n";
-                    return 0;
+                    return (null, $"Неправильний формат ціни. Помилка в рядку {rowNumber}.\n");
                 }
 
-                return value;
+                return (value, null);
             }
             else
             {
-                _isValid = false;
-                _validationErrorStr += $"Помилка в ціні в рядку {rowNumber}.\n";
-                return 0;
+                return (null, $"Помилка в ціні в рядку {rowNumber}.\n");
             }
         }
 
-        private int GetPublisherId(IXLRow row)
+        private (int?, string?) GetPublisherId(IXLRow row)
         {
             int rowNumber = row.RowNumber();
             var publisherName = row.Cell(4).Value.ToString().Trim();
@@ -155,52 +202,42 @@ namespace BookshopInfrastructure.Services
 
                 if (publisher != null)
                 {
-                    return publisher.Id;
+                    return (publisher.Id, null);
                 }
                 else
                 {
                     publisher = new Publisher { Name = publisherName };
                     _context.Publishers.Add(publisher);
-                    _context.SaveChanges(); 
+                    _context.SaveChanges();
 
-                    return publisher.Id;
+                    return (publisher.Id, null);
                 }
-                /*else
-                {
-                    _isValid = false;
-                    _validationErrorStr += $"Видавництва '{publisherName}' не знайдено. Помилка в рядку {rowNumber}.\n";
-                    return -1;
-                }*/
             }
             else
             {
-                _isValid = false;
-                _validationErrorStr += $"Назва видавництва обов'язкова! Помилка в рядку {rowNumber}.\n";
-                return -1;
+                return (null, $"Назва видавництва обов'язкова! Помилка в рядку {rowNumber}.\n");
             }
         }
 
-        private async Task GetCategoriesAsync(IXLRow row, Book book, CancellationToken cancellationToken)
+        private async Task<List<Category>> GetCategoriesAsync(IXLRow row, CancellationToken cancellationToken)
         {
             string value = row.Cell(6).Value.ToString();
+            var categories = new List<Category>();
 
             if (!string.IsNullOrEmpty(value))
             {
                 var categoriesArr = value.Split(",").Select(part => part.Trim()).ToArray();
 
-                for (int i = 0; i < categoriesArr.Length; i++)
+                foreach (var categoryName in categoriesArr)
                 {
-                    var categoryName = categoriesArr[i];
                     var category = await _context.Categories.FirstOrDefaultAsync(cat => cat.Name == categoryName, cancellationToken);
 
-                    if (category is null)
+                    if (category == null)
                     {
-                        category = new Category();
-                        category.Name = categoryName;
+                        category = new Category { Name = categoryName };
                         _context.Categories.Add(category);
                     }
-
-                    book.Categories.Add(category);
+                    categories.Add(category);
                 }
             }
             else
@@ -209,34 +246,38 @@ namespace BookshopInfrastructure.Services
                 _isValid = false;
                 _validationErrorStr += $"Категорії обов'язкові! Помилка в рядку {rowNumber}.\n";
             }
+
+            return categories;
         }
 
-        private async Task GetAuthorsAsync(IXLRow row, Book book, CancellationToken cancellationToken)
+        private async Task<List<Author>> GetAuthorsAsync(IXLRow row, CancellationToken cancellationToken)
         {
             string value = row.Cell(2).Value.ToString();
+            var authors = new List<Author>();
 
             if (!string.IsNullOrEmpty(value))
             {
                 var authorsArr = value.Split(",").Select(part => part.Trim()).ToArray();
 
-                for (int i = 0; i < authorsArr.Length; i++)
+                foreach (var authorName in authorsArr)
                 {
-                    var authorName = authorsArr[i];
                     var author = await _context.Authors.FirstOrDefaultAsync(a => a.FullName == authorName, cancellationToken);
 
-                    if (author is null)
+                    if (author == null)
                     {
                         string[] nameParts = authorName.Split(' ');
                         string firstName = nameParts[0];
                         string lastName = nameParts.Length > 1 ? nameParts[1] : "";
 
-                        author = new Author();
-                        author.FullName = authorName;
-                        author.FirstName = firstName;
-                        author.LastName = lastName;
+                        author = new Author
+                        {
+                            FullName = authorName,
+                            FirstName = firstName,
+                            LastName = lastName
+                        };
                         _context.Authors.Add(author);
                     }
-                    book.Authors.Add(author);
+                    authors.Add(author);
                 }
             }
             else
@@ -245,6 +286,9 @@ namespace BookshopInfrastructure.Services
                 _isValid = false;
                 _validationErrorStr += $"Автори обов'язкові! Помилка в рядку {rowNumber}.\n";
             }
+
+            return authors;
         }
     }
+
 }

@@ -316,10 +316,26 @@ namespace BookshopInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Import(IFormFile fileExcel, CancellationToken cancellationToken = default)
         {
+            if (fileExcel == null || fileExcel.Length == 0)
+            {
+                ViewBag.Message = "Оберіть файл для завантаження.";
+                return View();
+            }
+
             var importService = _bookDataPortServiceFactory.GetImportService(fileExcel.ContentType);
-            using var stream = fileExcel.OpenReadStream();
-            await importService.ImportFromStreamAsync(stream, cancellationToken);
-            return RedirectToAction(nameof(Index));
+
+            try
+            {
+                using var stream = fileExcel.OpenReadStream();
+                string result = await importService.ImportFromStreamAsync(stream, cancellationToken);
+                ViewBag.Message = result;
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = $"Сталася помилка під час імпорту: {ex.Message}";
+            }
+
+            return View();
         }
 
         [HttpGet]
